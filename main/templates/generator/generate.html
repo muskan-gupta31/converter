@@ -34,6 +34,11 @@
             transition: width 0.2s ease;
         }
 
+        .sidebar.collapsed {
+            width: 0;
+            overflow: hidden;
+        }
+
         .sidebar-header {
             padding: 18px 12px;
             border-bottom: 1px solid #4a4a4a;
@@ -93,22 +98,42 @@
             white-space: nowrap;
         }
 
-        .delete-btn {
+        .chat-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .chat-item:hover .chat-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
             background: none;
             border: none;
             color: #c5c5d2;
             cursor: pointer;
             padding: 4px;
-            opacity: 0;
-            transition: opacity 0.2s;
+            border-radius: 4px;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 14px;
         }
 
-        .chat-item:hover .delete-btn {
-            opacity: 1;
+        .action-btn:hover {
+            background-color: #40414f;
         }
 
-        .delete-btn:hover {
+        .action-btn.delete:hover {
             color: #ff6b6b;
+        }
+
+        .action-btn.edit:hover {
+            color: #4dabf7;
+        }
+
+        .action-btn.share:hover {
+            color: #51cf66;
         }
 
         /* Main Chat Area */
@@ -117,6 +142,62 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #4a4a4a;
+            background-color: #343541;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: #c5c5d2;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-toggle:hover {
+            background-color: #40414f;
+        }
+
+        .model-selector {
+            background: #40414f;
+            border: 1px solid #565869;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .top-action-btn {
+            background: none;
+            border: 1px solid #565869;
+            color: #c5c5d2;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .top-action-btn:hover {
+            background-color: #40414f;
         }
 
         .chat-container {
@@ -135,6 +216,7 @@
             display: flex;
             margin-bottom: 32px;
             animation: fadeInUp 0.3s ease-out;
+            position: relative;
         }
 
         .message.user {
@@ -166,11 +248,48 @@
         .message-content {
             margin: 0 16px;
             flex: 1;
-            line-height: 1.6;
+            line-height: 1.7;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: calc(100% - 64px);
         }
 
         .user .message-content {
             text-align: right;
+        }
+
+        .assistant .message-content {
+            white-space: pre-wrap;
+        }
+
+        .message-actions {
+            position: absolute;
+            right: -40px;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .message:hover .message-actions {
+            opacity: 1;
+        }
+
+        .message-action-btn {
+            background: #40414f;
+            border: none;
+            color: #c5c5d2;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .message-action-btn:hover {
+            background-color: #565869;
         }
 
         .welcome-screen {
@@ -186,44 +305,91 @@
         .welcome-title {
             font-size: 32px;
             font-weight: 600;
-            margin-bottom: 32px;
+            margin-bottom: 16px;
             background: linear-gradient(90deg, #10a37f, #5436da);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
+        .welcome-subtitle {
+            font-size: 18px;
+            color: #8e8ea0;
+            margin-bottom: 32px;
+        }
+
         .example-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 16px;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             margin-bottom: 32px;
         }
 
         .example-card {
             background-color: #40414f;
-            border-radius: 8px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 24px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
             border: 1px solid #565869;
+            text-align: left;
         }
 
         .example-card:hover {
             background-color: #4a4b5c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .example-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
         }
 
         .example-title {
             font-weight: 600;
             margin-bottom: 8px;
             color: #ffffff;
+            font-size: 16px;
         }
 
         .example-text {
             color: #c5c5d2;
             font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            max-width: 600px;
+            margin-bottom: 32px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: #8e8ea0;
+            line-height: 1.4;
         }
 
         /* Input Area */
@@ -248,6 +414,11 @@
             min-height: 52px;
         }
 
+        .input-wrapper:focus-within {
+            border-color: #19c37d;
+            box-shadow: 0 0 0 1px #19c37d;
+        }
+
         .message-input {
             flex: 1;
             background: none;
@@ -266,6 +437,36 @@
             color: #8e8ea0;
         }
 
+        .input-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 8px;
+        }
+
+        .input-action-btn {
+            background: none;
+            border: none;
+            color: #8e8ea0;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-action-btn:hover:not(:disabled) {
+            background-color: #565869;
+            color: #ffffff;
+        }
+
+        .input-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .send-button {
             background: none;
             border: none;
@@ -273,7 +474,7 @@
             cursor: pointer;
             padding: 8px;
             margin-left: 8px;
-            border-radius: 4px;
+            border-radius: 6px;
             transition: all 0.2s;
             display: flex;
             align-items: center;
@@ -291,6 +492,20 @@
 
         .send-button.active {
             color: #19c37d;
+            background-color: #19c37d;
+        }
+
+        .send-button.active svg {
+            color: #ffffff;
+        }
+
+        .stop-button {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .stop-button:hover {
+            background-color: #ff5252;
         }
 
         /* Animations */
@@ -338,6 +553,100 @@
             animation-delay: 0.4s;
         }
 
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #40414f;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #c5c5d2;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 18px;
+        }
+
+        .close-btn:hover {
+            background-color: #565869;
+        }
+
+        /* Settings */
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .setting-input {
+            width: 100%;
+            background-color: #565869;
+            border: 1px solid #6c7293;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .setting-slider {
+            width: 100%;
+            margin: 8px 0;
+        }
+
+        .setting-description {
+            font-size: 12px;
+            color: #8e8ea0;
+            margin-top: 4px;
+        }
+
+        /* Word count */
+        .word-count {
+            position: absolute;
+            bottom: -20px;
+            right: 0;
+            font-size: 12px;
+            color: #8e8ea0;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
@@ -363,6 +672,13 @@
                 overflow: hidden;
             }
             
+            .sidebar.mobile-open {
+                width: 260px;
+                position: fixed;
+                z-index: 100;
+                height: 100vh;
+            }
+            
             .message-container {
                 padding: 0 16px;
             }
@@ -370,16 +686,50 @@
             .example-cards {
                 grid-template-columns: 1fr;
             }
+            
+            .message-actions {
+                position: static;
+                margin-top: 8px;
+                flex-direction: row;
+                justify-content: flex-end;
+                opacity: 1;
+            }
+
+            .top-bar {
+                padding: 12px 16px;
+            }
+
+            .input-area {
+                padding: 16px;
+            }
+        }
+
+        /* Export button */
+        .export-btn {
+            background: #19c37d;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .export-btn:hover {
+            background-color: #16a069;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <button class="new-chat-btn" onclick="startNewChat()">
-                    <span>+</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
                     New chat
                 </button>
             </div>
@@ -390,23 +740,100 @@
 
         <!-- Main Content -->
         <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12h18M3 6h18M3 18h18"/>
+                        </svg>
+                    </button>
+                    <select class="model-selector" id="modelSelector">
+                        <option value="django-model">Django AI Model</option>
+                        <option value="gpt2">GPT-2 Base</option>
+                        <option value="custom">Custom Model</option>
+                    </select>
+                </div>
+                
+                <div class="top-actions">
+                    <button class="top-action-btn" onclick="clearAllChats()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/>
+                        </svg>
+                        Clear all
+                    </button>
+                    <button class="top-action-btn" onclick="exportChat()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                        </svg>
+                        Export
+                    </button>
+                    <button class="top-action-btn" onclick="openSettings()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Container -->
             <div class="chat-container" id="chatContainer">
                 <div class="message-container" id="messageContainer">
                     <!-- Welcome screen -->
                     <div class="welcome-screen" id="welcomeScreen">
                         <h1 class="welcome-title">ChatGPT</h1>
+                        <p class="welcome-subtitle">How can I help you today?</p>
+                        
                         <div class="example-cards">
                             <div class="example-card" onclick="sendExampleMessage('Explain quantum computing in simple terms')">
-                                <div class="example-title">💡 Examples</div>
+                                <div class="example-icon">🔬</div>
+                                <div class="example-title">Science & Technology</div>
                                 <div class="example-text">Explain quantum computing in simple terms</div>
                             </div>
                             <div class="example-card" onclick="sendExampleMessage('Help me write a professional email')">
-                                <div class="example-title">✍️ Writing</div>
+                                <div class="example-icon">✍️</div>
+                                <div class="example-title">Writing & Communication</div>
                                 <div class="example-text">Help me write a professional email</div>
                             </div>
                             <div class="example-card" onclick="sendExampleMessage('Create a workout plan for beginners')">
-                                <div class="example-title">🎯 Planning</div>
+                                <div class="example-icon">💪</div>
+                                <div class="example-title">Health & Fitness</div>
                                 <div class="example-text">Create a workout plan for beginners</div>
+                            </div>
+                            <div class="example-card" onclick="sendExampleMessage('What is heat and how does it transfer?')">
+                                <div class="example-icon">🌡️</div>
+                                <div class="example-title">Physics & Chemistry</div>
+                                <div class="example-text">What is heat and how does it transfer?</div>
+                            </div>
+                            <div class="example-card" onclick="sendExampleMessage('Teach me about machine learning')">
+                                <div class="example-icon">🤖</div>
+                                <div class="example-title">AI & Machine Learning</div>
+                                <div class="example-text">Teach me about machine learning</div>
+                            </div>
+                            <div class="example-card" onclick="sendExampleMessage('Help me plan a budget')">
+                                <div class="example-icon">💰</div>
+                                <div class="example-title">Finance & Planning</div>
+                                <div class="example-text">Help me plan a budget</div>
+                            </div>
+                        </div>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon">⚡</div>
+                                <div class="feature-title">Fast Responses</div>
+                                <div class="feature-desc">Get instant, comprehensive answers</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">🧠</div>
+                                <div class="feature-title">Smart Context</div>
+                                <div class="feature-desc">Remembers conversation history</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">🎯</div>
+                                <div class="feature-title">Accurate Info</div>
+                                <div class="feature-desc">Reliable and detailed explanations</div>
                             </div>
                         </div>
                     </div>
@@ -423,28 +850,124 @@
                             placeholder="Message ChatGPT..."
                             rows="1"
                             onkeydown="handleKeyDown(event)"
-                            oninput="adjustTextareaHeight(this)"
+                            oninput="adjustTextareaHeight(this); updateSendButton(); updateWordCount()"
                         ></textarea>
+                        <div class="input-actions">
+                            <button class="input-action-btn" title="Attach file" onclick="attachFile()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                                </svg>
+                            </button>
+                            <button class="input-action-btn" title="Voice input" onclick="toggleVoiceInput()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                    <line x1="12" y1="19" x2="12" y2="23"/>
+                                    <line x1="8" y1="23" x2="16" y2="23"/>
+                                </svg>
+                            </button>
+                        </div>
                         <button class="send-button" id="sendButton" onclick="sendMessage()" disabled>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 2L11 13"/>
+                                <path d="M22 2L15 22L11 13L2 9L22 2z"/>
                             </svg>
                         </button>
                     </div>
+                    <div class="word-count" id="wordCount">0 words</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Settings</h2>
+                <button class="close-btn" onclick="closeSettings()">×</button>
+            </div>
+            <div class="setting-group">
+                <label class="setting-label">Model Temperature</label>
+                <input type="range" class="setting-slider" id="temperatureSlider" min="0" max="1" step="0.1" value="0.8">
+                <div class="setting-description">Controls randomness. Higher values make output more random.</div>
+            </div>
+            <div class="setting-group">
+                <label class="setting-label">Max Response Length</label>
+                <input type="range" class="setting-slider" id="maxLengthSlider" min="50" max="500" step="50" value="200">
+                <div class="setting-description">Maximum number of tokens in the response.</div>
+            </div>
+            <div class="setting-group">
+                <label class="setting-label">System Message</label>
+                <textarea class="setting-input" id="systemMessage" rows="3" placeholder="You are a helpful assistant..."></textarea>
+                <div class="setting-description">Instructions for how the AI should behave.</div>
+            </div>
+            <button class="export-btn" onclick="saveSettings()">Save Settings</button>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Export Chat</h2>
+                <button class="close-btn" onclick="closeExportModal()">×</button>
+            </div>
+            <div class="setting-group">
+                <label class="setting-label">Export Format</label>
+                <select class="setting-input" id="exportFormat">
+                    <option value="json">JSON</option>
+                    <option value="markdown">Markdown</option>
+                    <option value="txt">Plain Text</option>
+                    <option value="html">HTML</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label class="setting-label">Include</label>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
+                        <input type="checkbox" id="includeTimestamps" checked>
+                        Timestamps
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
+                        <input type="checkbox" id="includeSystemMessages" checked>
+                        System Messages
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
+                        <input type="checkbox" id="includeMetadata" checked>
+                        Metadata
+                    </label>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <button class="export-btn" onclick="downloadChat()">Download</button>
+                <button class="top-action-btn" onclick="copyToClipboard()">Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Global variables
         let chatHistory = [];
         let currentChatId = null;
         let isTyping = false;
+        let isSidebarOpen = true;
+        let settings = {
+            temperature: 0.8,
+            maxLength: 200,
+            systemMessage: ''
+        };
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            loadChatHistory();
+            loadSettings();
+            loadChatHistoryFromAPI();
             updateSendButton();
+            updateWordCount();
+            
+            // Focus on input
+            const messageInput = document.getElementById('messageInput');
+            messageInput.focus();
         });
 
         // Input handling
@@ -453,12 +976,19 @@
 
         messageInput.addEventListener('input', function() {
             updateSendButton();
+            updateWordCount();
         });
 
         function updateSendButton() {
             const hasText = messageInput.value.trim().length > 0;
             sendButton.disabled = !hasText || isTyping;
             sendButton.classList.toggle('active', hasText && !isTyping);
+        }
+
+        function updateWordCount() {
+            const text = messageInput.value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            document.getElementById('wordCount').textContent = `${words} words`;
         }
 
         function adjustTextareaHeight(textarea) {
@@ -475,44 +1005,81 @@
             }
         }
 
-        function sendMessage() {
+        // CSRF token helper
+        function getCsrfToken() {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'csrftoken') {
+                    return value;
+                }
+            }
+            const csrfMeta = document.querySelector('[name=csrfmiddlewaretoken]');
+            return csrfMeta ? csrfMeta.getAttribute('content') : '';
+        }
+
+        // Main message sending function
+        async function sendMessage() {
             const message = messageInput.value.trim();
             if (!message || isTyping) return;
-
-            if (!currentChatId) {
-                startNewChat();
-            }
 
             addMessage('user', message);
             messageInput.value = '';
             adjustTextareaHeight(messageInput);
             updateSendButton();
+            updateWordCount();
 
-            // Simulate AI response
-            setTimeout(() => {
-                showTypingIndicator();
-                setTimeout(() => {
-                    hideTypingIndicator();
-                    const responses = [
-                        "I'd be happy to help you with that! Let me provide you with a comprehensive answer based on your question.",
-                        "That's a great question! Here's what I can tell you about this topic:",
-                        "I understand what you're asking about. Let me break this down for you:",
-                        "Thanks for your question! I'll do my best to provide you with a helpful response.",
-                        "That's an interesting topic to explore. Here are some key points to consider:"
-                    ];
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                    addMessage('assistant', randomResponse);
-                    
-                    // Update chat title if it's the first message
-                    const currentChat = chatHistory.find(chat => chat.id === currentChatId);
-                    if (currentChat && currentChat.messages.length === 2) {
-                        const title = message.length > 30 ? message.substring(0, 30) + '...' : message;
-                        currentChat.title = title;
-                        saveChatHistory();
-                        renderChatHistory();
-                    }
-                }, 1500);
-            }, 500);
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                // Call Django API
+                const response = await fetch('/generator/api/chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: currentChatId,
+                        temperature: settings.temperature,
+                        max_length: settings.maxLength,
+                        system_message: settings.systemMessage
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                hideTypingIndicator();
+                
+                // Update current chat ID if new session
+                if (!currentChatId) {
+                    currentChatId = data.session_id;
+                }
+                
+                // Add AI response
+                addMessage('assistant', data.message);
+                
+                // Update chat history
+                await loadChatHistoryFromAPI();
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                hideTypingIndicator();
+                addMessage('assistant', 'Sorry, I encountered an error while processing your request. Please try again.');
+            }
+        }
+
+        function sendExampleMessage(message) {
+            messageInput.value = message;
+            updateSendButton();
+            updateWordCount();
+            sendMessage();
         }
 
         function addMessage(role, content) {
@@ -529,23 +1096,51 @@
             messageContent.className = 'message-content';
             messageContent.textContent = content;
 
+            const messageActions = document.createElement('div');
+            messageActions.className = 'message-actions';
+            
+            if (role === 'assistant') {
+                messageActions.innerHTML = `
+                    <button class="message-action-btn" onclick="copyMessage(this)" title="Copy">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                    </button>
+                    <button class="message-action-btn" onclick="regenerateResponse(this)" title="Regenerate">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6"/>
+                            <path d="M1 20v-6h6"/>
+                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                        </svg>
+                    </button>
+                `;
+            } else {
+                messageActions.innerHTML = `
+                    <button class="message-action-btn" onclick="editMessage(this)" title="Edit">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </button>
+                    <button class="message-action-btn" onclick="copyMessage(this)" title="Copy">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                    </button>
+                `;
+            }
+
             messageDiv.appendChild(avatar);
             messageDiv.appendChild(messageContent);
+            messageDiv.appendChild(messageActions);
 
             document.getElementById('messageContainer').appendChild(messageDiv);
 
             // Scroll to bottom
             const chatContainer = document.getElementById('chatContainer');
             chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            // Save to current chat
-            if (currentChatId) {
-                const currentChat = chatHistory.find(chat => chat.id === currentChatId);
-                if (currentChat) {
-                    currentChat.messages.push({ role, content, timestamp: new Date().toISOString() });
-                    saveChatHistory();
-                }
-            }
         }
 
         function showTypingIndicator() {
@@ -601,90 +1196,187 @@
             }
         }
 
-        function startNewChat() {
-            currentChatId = Date.now().toString();
-            const newChat = {
-                id: currentChatId,
-                title: 'New Chat',
-                messages: [],
-                timestamp: new Date().toISOString()
-            };
-
-            chatHistory.unshift(newChat);
-            saveChatHistory();
-            renderChatHistory();
-            clearMessages();
-            showWelcomeScreen();
-            messageInput.focus();
-        }
-
         function clearMessages() {
             const messageContainer = document.getElementById('messageContainer');
             messageContainer.innerHTML = `
                 <div class="welcome-screen" id="welcomeScreen">
                     <h1 class="welcome-title">ChatGPT</h1>
+                    <p class="welcome-subtitle">How can I help you today?</p>
+                    
                     <div class="example-cards">
                         <div class="example-card" onclick="sendExampleMessage('Explain quantum computing in simple terms')">
-                            <div class="example-title">💡 Examples</div>
+                            <div class="example-icon">🔬</div>
+                            <div class="example-title">Science & Technology</div>
                             <div class="example-text">Explain quantum computing in simple terms</div>
                         </div>
                         <div class="example-card" onclick="sendExampleMessage('Help me write a professional email')">
-                            <div class="example-title">✍️ Writing</div>
+                            <div class="example-icon">✍️</div>
+                            <div class="example-title">Writing & Communication</div>
                             <div class="example-text">Help me write a professional email</div>
                         </div>
                         <div class="example-card" onclick="sendExampleMessage('Create a workout plan for beginners')">
-                            <div class="example-title">🎯 Planning</div>
+                            <div class="example-icon">💪</div>
+                            <div class="example-title">Health & Fitness</div>
                             <div class="example-text">Create a workout plan for beginners</div>
+                        </div>
+                        <div class="example-card" onclick="sendExampleMessage('What is heat and how does it transfer?')">
+                            <div class="example-icon">🌡️</div>
+                            <div class="example-title">Physics & Chemistry</div>
+                            <div class="example-text">What is heat and how does it transfer?</div>
+                        </div>
+                        <div class="example-card" onclick="sendExampleMessage('Teach me about machine learning')">
+                            <div class="example-icon">🤖</div>
+                            <div class="example-title">AI & Machine Learning</div>
+                            <div class="example-text">Teach me about machine learning</div>
+                        </div>
+                        <div class="example-card" onclick="sendExampleMessage('Help me plan a budget')">
+                            <div class="example-icon">💰</div>
+                            <div class="example-title">Finance & Planning</div>
+                            <div class="example-text">Help me plan a budget</div>
+                        </div>
+                    </div>
+
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">⚡</div>
+                            <div class="feature-title">Fast Responses</div>
+                            <div class="feature-desc">Get instant, comprehensive answers</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🧠</div>
+                            <div class="feature-title">Smart Context</div>
+                            <div class="feature-desc">Remembers conversation history</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🎯</div>
+                            <div class="feature-title">Accurate Info</div>
+                            <div class="feature-desc">Reliable and detailed explanations</div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        function loadChat(chatId) {
-            const chat = chatHistory.find(c => c.id === chatId);
-            if (!chat) return;
-
-            currentChatId = chatId;
+        // Chat management functions
+        function startNewChat() {
+            currentChatId = null;
             clearMessages();
-            hideWelcomeScreen();
-
-            chat.messages.forEach(message => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${message.role}`;
-
-                const avatar = document.createElement('div');
-                avatar.className = 'avatar';
-                avatar.textContent = message.role === 'user' ? 'U' : 'AI';
-
-                const messageContent = document.createElement('div');
-                messageContent.className = 'message-content';
-                messageContent.textContent = message.content;
-
-                messageDiv.appendChild(avatar);
-                messageDiv.appendChild(messageContent);
-
-                document.getElementById('messageContainer').appendChild(messageDiv);
-            });
-
-            const chatContainer = document.getElementById('chatContainer');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
+            showWelcomeScreen();
+            messageInput.focus();
             renderChatHistory();
         }
 
-        function deleteChat(chatId, event) {
+        // Load chat history from Django API
+        async function loadChatHistoryFromAPI() {
+            try {
+                const response = await fetch('/generator/api/history/');
+                if (response.ok) {
+                    const data = await response.json();
+                    chatHistory = data.chats.map(chat => ({
+                        id: chat.id,
+                        title: chat.title,
+                        messages: [],
+                        timestamp: chat.updated_at
+                    }));
+                    renderChatHistory();
+                }
+            } catch (error) {
+                console.error('Error loading chat history:', error);
+            }
+        }
+
+        // Load specific chat messages from API
+        async function loadChatFromAPI(chatId) {
+            try {
+                const response = await fetch(`/generator/api/chat/${chatId}/`);
+                if (response.ok) {
+                    const data = await response.json();
+                    currentChatId = chatId;
+                    clearMessages();
+                    hideWelcomeScreen();
+
+                    // Display messages
+                    data.messages.forEach(message => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = `message ${message.role}`;
+
+                        const avatar = document.createElement('div');
+                        avatar.className = 'avatar';
+                        avatar.textContent = message.role === 'user' ? 'U' : 'AI';
+
+                        const messageContent = document.createElement('div');
+                        messageContent.className = 'message-content';
+                        messageContent.textContent = message.content;
+
+                        const messageActions = document.createElement('div');
+                        messageActions.className = 'message-actions';
+                        
+                        if (message.role === 'assistant') {
+                            messageActions.innerHTML = `
+                                <button class="message-action-btn" onclick="copyMessage(this)" title="Copy">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                    </svg>
+                                </button>
+                            `;
+                        }
+
+                        messageDiv.appendChild(avatar);
+                        messageDiv.appendChild(messageContent);
+                        messageDiv.appendChild(messageActions);
+
+                        document.getElementById('messageContainer').appendChild(messageDiv);
+                    });
+
+                    const chatContainer = document.getElementById('chatContainer');
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                    renderChatHistory();
+                }
+            } catch (error) {
+                console.error('Error loading chat:', error);
+            }
+        }
+
+        function loadChat(chatId) {
+            loadChatFromAPI(chatId);
+        }
+
+        async function deleteChat(chatId, event) {
             event.stopPropagation();
-            chatHistory = chatHistory.filter(chat => chat.id !== chatId);
             
-            if (currentChatId === chatId) {
-                currentChatId = null;
-                clearMessages();
-                showWelcomeScreen();
+            if (!confirm('Are you sure you want to delete this chat?')) {
+                return;
             }
             
-            saveChatHistory();
-            renderChatHistory();
+            try {
+                const response = await fetch(`/generator/api/chat/${chatId}/delete/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': getCsrfToken()
+                    }
+                });
+
+                if (response.ok) {
+                    // Remove from local array
+                    chatHistory = chatHistory.filter(chat => chat.id !== chatId);
+                    
+                    if (currentChatId === chatId) {
+                        currentChatId = null;
+                        clearMessages();
+                        showWelcomeScreen();
+                    }
+                    
+                    renderChatHistory();
+                } else {
+                    console.error('Failed to delete chat');
+                    alert('Failed to delete chat. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error deleting chat:', error);
+                alert('Error deleting chat. Please try again.');
+            }
         }
 
         function renderChatHistory() {
@@ -700,32 +1392,342 @@
                 titleDiv.className = 'chat-title';
                 titleDiv.textContent = chat.title;
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'delete-btn';
-                deleteBtn.innerHTML = '🗑️';
-                deleteBtn.onclick = (e) => deleteChat(chat.id, e);
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'chat-actions';
+                actionsDiv.innerHTML = `
+                    <button class="action-btn edit" onclick="renameChat('${chat.id}', event)" title="Rename">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn share" onclick="shareChat('${chat.id}', event)" title="Share">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                            <path d="M16 6l-4-4-4 4"/>
+                            <path d="M12 2v13"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn delete" onclick="deleteChat('${chat.id}', event)" title="Delete">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18"/>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                        </svg>
+                    </button>
+                `;
 
                 chatItem.appendChild(titleDiv);
-                chatItem.appendChild(deleteBtn);
+                chatItem.appendChild(actionsDiv);
                 chatHistoryDiv.appendChild(chatItem);
             });
         }
 
-        function saveChatHistory() {
-            // Note: Using in-memory storage as localStorage is not supported in Claude artifacts
-            // In a real implementation, you would use: localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        // Message actions
+        function copyMessage(button) {
+            const messageContent = button.closest('.message').querySelector('.message-content');
+            const text = messageContent.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // Show temporary feedback
+                const originalText = button.innerHTML;
+                button.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 1000);
+            }).catch(err => {
+                console.error('Failed to copy text:', err);
+                alert('Failed to copy message');
+            });
         }
 
-        function loadChatHistory() {
-            // Note: Using in-memory storage as localStorage is not supported in Claude artifacts
-            // In a real implementation, you would use: const saved = localStorage.getItem('chatHistory');
-            renderChatHistory();
+        function regenerateResponse(button) {
+            // Find the user message before this assistant message
+            const currentMessage = button.closest('.message');
+            let userMessage = currentMessage.previousElementSibling;
+            
+            while (userMessage && !userMessage.classList.contains('user')) {
+                userMessage = userMessage.previousElementSibling;
+            }
+            
+            if (userMessage) {
+                const userText = userMessage.querySelector('.message-content').textContent;
+                // Remove the current response
+                currentMessage.remove();
+                // Resend the user message
+                messageInput.value = userText;
+                sendMessage();
+            }
         }
 
-        function sendExampleMessage(message) {
-            messageInput.value = message;
-            updateSendButton();
-            sendMessage();
+        function editMessage(button) {
+            const messageContent = button.closest('.message').querySelector('.message-content');
+            const currentText = messageContent.textContent;
+            const newText = prompt('Edit your message:', currentText);
+            
+            if (newText && newText !== currentText) {
+                messageContent.textContent = newText;
+                // Optionally resend the edited message
+                messageInput.value = newText;
+            }
+        }
+
+        // Sidebar functions
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                sidebar.classList.toggle('mobile-open');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                isSidebarOpen = !sidebar.classList.contains('collapsed');
+            }
+        }
+
+        // Top bar functions
+        function clearAllChats() {
+            if (confirm('Are you sure you want to clear all chat history?')) {
+                chatHistory = [];
+                currentChatId = null;
+                clearMessages();
+                showWelcomeScreen();
+                renderChatHistory();
+            }
+        }
+
+        function renameChat(chatId, event) {
+            event.stopPropagation();
+            const chat = chatHistory.find(c => c.id === chatId);
+            if (chat) {
+                const newName = prompt('Enter new chat name:', chat.title);
+                if (newName && newName.trim()) {
+                    chat.title = newName.trim();
+                    renderChatHistory();
+                    // Here you could also update the server
+                }
+            }
+        }
+
+        function shareChat(chatId, event) {
+            event.stopPropagation();
+            // Generate a shareable link
+            const shareUrl = `${window.location.origin}${window.location.pathname}?chat=${chatId}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'ChatGPT Conversation',
+                    url: shareUrl
+                });
+            } else {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('Chat link copied to clipboard!');
+                });
+            }
+        }
+
+        // Settings functions
+        function openSettings() {
+            document.getElementById('settingsModal').style.display = 'block';
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('chatSettings');
+            if (savedSettings) {
+                settings = { ...settings, ...JSON.parse(savedSettings) };
+                
+                // Update UI elements
+                if (document.getElementById('temperatureSlider')) {
+                    document.getElementById('temperatureSlider').value = settings.temperature;
+                }
+                if (document.getElementById('maxLengthSlider')) {
+                    document.getElementById('maxLengthSlider').value = settings.maxLength;
+                }
+                if (document.getElementById('systemMessage')) {
+                    document.getElementById('systemMessage').value = settings.systemMessage || '';
+                }
+            }
+        }
+
+        function saveSettings() {
+            settings.temperature = parseFloat(document.getElementById('temperatureSlider').value);
+            settings.maxLength = parseInt(document.getElementById('maxLengthSlider').value);
+            settings.systemMessage = document.getElementById('systemMessage').value;
+            
+            localStorage.setItem('chatSettings', JSON.stringify(settings));
+            alert('Settings saved successfully!');
+            closeSettings();
+        }
+
+        // Export functions
+        function exportChat() {
+            document.getElementById('exportModal').style.display = 'block';
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        function downloadChat() {
+            const format = document.getElementById('exportFormat').value;
+            const includeTimestamps = document.getElementById('includeTimestamps').checked;
+            const includeSystemMessages = document.getElementById('includeSystemMessages').checked;
+            const includeMetadata = document.getElementById('includeMetadata').checked;
+            
+            // Get current chat messages
+            const messages = Array.from(document.querySelectorAll('.message')).map(msg => {
+                const role = msg.classList.contains('user') ? 'user' : 'assistant';
+                const content = msg.querySelector('.message-content').textContent;
+                return { role, content, timestamp: new Date().toISOString() };
+            });
+            
+            let exportData = '';
+            const filename = `chat-export-${new Date().toISOString().split('T')[0]}`;
+            
+            switch (format) {
+                case 'json':
+                    exportData = JSON.stringify({
+                        chat_id: currentChatId,
+                        exported_at: new Date().toISOString(),
+                        messages: messages
+                    }, null, 2);
+                    downloadFile(exportData, `${filename}.json`, 'application/json');
+                    break;
+                    
+                case 'markdown':
+                    exportData = '# ChatGPT Conversation\n\n';
+                    if (includeMetadata) {
+                        exportData += `**Exported:** ${new Date().toLocaleString()}\n`;
+                        exportData += `**Chat ID:** ${currentChatId || 'New Chat'}\n\n`;
+                    }
+                    messages.forEach(msg => {
+                        exportData += `## ${msg.role === 'user' ? 'You' : 'ChatGPT'}\n\n`;
+                        if (includeTimestamps) {
+                            exportData += `*${new Date(msg.timestamp).toLocaleString()}*\n\n`;
+                        }
+                        exportData += `${msg.content}\n\n`;
+                    });
+                    downloadFile(exportData, `${filename}.md`, 'text/markdown');
+                    break;
+                    
+                case 'txt':
+                    messages.forEach(msg => {
+                        exportData += `${msg.role === 'user' ? 'You' : 'ChatGPT'}: `;
+                        if (includeTimestamps) {
+                            exportData += `[${new Date(msg.timestamp).toLocaleString()}] `;
+                        }
+                        exportData += `${msg.content}\n\n`;
+                    });
+                    downloadFile(exportData, `${filename}.txt`, 'text/plain');
+                    break;
+                    
+                case 'html':
+                    exportData = `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>ChatGPT Conversation</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+                                .message { margin-bottom: 20px; padding: 15px; border-radius: 8px; }
+                                .user { background-color: #e3f2fd; }
+                                .assistant { background-color: #f3e5f5; }
+                                .role { font-weight: bold; margin-bottom: 5px; }
+                                .timestamp { font-size: 0.8em; color: #666; }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>ChatGPT Conversation</h1>
+                            ${includeMetadata ? `<p><strong>Exported:</strong> ${new Date().toLocaleString()}</p>` : ''}
+                            ${messages.map(msg => `
+                                <div class="message ${msg.role}">
+                                    <div class="role">${msg.role === 'user' ? 'You' : 'ChatGPT'}</div>
+                                    ${includeTimestamps ? `<div class="timestamp">${new Date(msg.timestamp).toLocaleString()}</div>` : ''}
+                                    <div>${msg.content}</div>
+                                </div>
+                            `).join('')}
+                        </body>
+                        </html>
+                    `;
+                    downloadFile(exportData, `${filename}.html`, 'text/html');
+                    break;
+            }
+            
+            closeExportModal();
+        }
+
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function copyToClipboard() {
+            const format = document.getElementById('exportFormat').value;
+            const includeTimestamps = document.getElementById('includeTimestamps').checked;
+            
+            const messages = Array.from(document.querySelectorAll('.message')).map(msg => {
+                const role = msg.classList.contains('user') ? 'user' : 'assistant';
+                const content = msg.querySelector('.message-content').textContent;
+                return { role, content, timestamp: new Date().toISOString() };
+            });
+            
+            let exportData = '';
+            
+            if (format === 'markdown') {
+                exportData = '# ChatGPT Conversation\n\n';
+                messages.forEach(msg => {
+                    exportData += `## ${msg.role === 'user' ? 'You' : 'ChatGPT'}\n\n`;
+                    if (includeTimestamps) {
+                        exportData += `*${new Date(msg.timestamp).toLocaleString()}*\n\n`;
+                    }
+                    exportData += `${msg.content}\n\n`;
+                });
+            } else {
+                messages.forEach(msg => {
+                    exportData += `${msg.role === 'user' ? 'You' : 'ChatGPT'}: `;
+                    if (includeTimestamps) {
+                        exportData += `[${new Date(msg.timestamp).toLocaleString()}] `;
+                    }
+                    exportData += `${msg.content}\n\n`;
+                });
+            }
+            
+            navigator.clipboard.writeText(exportData).then(() => {
+                alert('Chat copied to clipboard!');
+            });
+        }
+
+        // Additional utility functions
+        function attachFile() {
+            alert('File attachment feature not implemented yet.');
+        }
+
+        function toggleVoiceInput() {
+            alert('Voice input feature not implemented yet.');
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const settingsModal = document.getElementById('settingsModal');
+            const exportModal = document.getElementById('exportModal');
+            
+            if (event.target === settingsModal) {
+                settingsModal.style.display = 'none';
+            }
+            if (event.target === exportModal) {
+                exportModal.style.display = 'none';
+            }
         }
     </script>
 </body>

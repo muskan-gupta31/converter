@@ -1,9 +1,7 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.utils.decorators import method_decorator
-from django.views import View
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,39 +13,37 @@ from .ai_service import ai_generator
 
 logger = logging.getLogger(__name__)
 
-# Traditional Django view for template rendering
+# Traditional form view
 def generate_text(request):
-    """Traditional form-based view"""
+    """Enhanced form-based view with longer responses"""
     output_text = ""
     if request.method == "POST":
         input_text = request.POST.get("prompt", "")
         if input_text.strip():
             try:
-                # Generate response using AI service
-                output_text = ai_generator.generate_response(input_text, max_length=200)
-                logger.info(f"Generated response length: {len(output_text)}")
+                # Generate comprehensive response
+                output_text = ai_generator.generate_response(input_text, max_new_tokens=200)
+                logger.info(f"Generated response: {len(output_text)} characters")
             except Exception as e:
                 logger.error(f"Error generating text: {e}")
-                output_text = "Sorry, I encountered an error while generating a response."
+                output_text = "I apologize, but I encountered an error while generating a response. Please try again."
     
     return render(request, "generator/generate.html", {"output": output_text})
 
-# API Views for ChatGPT-like interface
+# API endpoint for chat interface
 @csrf_exempt
 @api_view(['POST'])
 def chat_api(request):
-    """Main chat API endpoint"""
+    """Enhanced chat API with better responses"""
     try:
         data = json.loads(request.body)
         message = data.get('message', '').strip()
         session_id = data.get('session_id')
         
         if not message:
-            return Response({
-                'error': 'Message is required'
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Message is required'}, status=400)
         
-        # Get or create chat session
+        # Get or create session
         if session_id:
             try:
                 session = ChatSession.objects.get(session_id=session_id)
@@ -58,20 +54,20 @@ def chat_api(request):
             session = ChatSession.objects.create(session_id=session_id)
         
         # Save user message
-        user_message = ChatMessage.objects.create(
+        ChatMessage.objects.create(
             session=session,
             role='user',
             content=message
         )
         
-        # Get conversation history for context
+        # Get conversation history
         history = list(session.messages.values('role', 'content'))
         
-        # Generate AI response
+        # Generate comprehensive AI response
         ai_response = ai_generator.generate_response(
             message, 
-            conversation_history=history[:-1],  # Exclude current message
-            max_length=200
+            conversation_history=history[:-1],
+            max_new_tokens=200  # Longer responses
         )
         
         # Save AI response
@@ -81,8 +77,8 @@ def chat_api(request):
             content=ai_response
         )
         
-        # Update session title if it's the first message
-        if session.messages.count() == 2:  # First user + AI response
+        # Update session title for first message
+        if session.messages.count() == 2:
             title = message[:50] + ('...' if len(message) > 50 else '')
             session.title = title
             session.save()
@@ -93,21 +89,15 @@ def chat_api(request):
             'title': session.title
         })
         
-    except json.JSONDecodeError:
-        return Response({
-            'error': 'Invalid JSON'
-        }, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
-        logger.error(f"Error in chat API: {e}")
-        return Response({
-            'error': 'Internal server error'
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        logger.error(f"Chat API error: {e}")
+        return Response({'error': 'Internal server error'}, status=500)
 
 @api_view(['GET'])
 def chat_history_api(request):
-    """Get all chat sessions"""
+    """Get chat history"""
     try:
-        sessions = ChatSession.objects.all()[:20]  # Latest 20 chats
+        sessions = ChatSession.objects.all()[:20]
         history = []
         
         for session in sessions:
@@ -120,23 +110,19 @@ def chat_history_api(request):
             })
         
         return Response({'chats': history})
-        
     except Exception as e:
-        logger.error(f"Error fetching chat history: {e}")
-        return Response({
-            'error': 'Failed to fetch chat history'
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        logger.error(f"History API error: {e}")
+        return Response({'error': 'Failed to fetch history'}, status=500)
 
 @api_view(['GET'])
 def chat_messages_api(request, session_id):
-    """Get messages for a specific chat session"""
+    """Get messages for specific session"""
     try:
         session = ChatSession.objects.get(session_id=session_id)
-        messages = session.messages.all()
+        messages = []
         
-        message_list = []
-        for msg in messages:
-            message_list.append({
+        for msg in session.messages.all():
+            messages.append({
                 'role': msg.role,
                 'content': msg.content,
                 'timestamp': msg.timestamp.isoformat()
@@ -145,43 +131,24 @@ def chat_messages_api(request, session_id):
         return Response({
             'session_id': session_id,
             'title': session.title,
-            'messages': message_list
+            'messages': messages
         })
-        
     except ChatSession.DoesNotExist:
-        return Response({
-            'error': 'Chat session not found'
-        }, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Session not found'}, status=404)
     except Exception as e:
-        logger.error(f"Error fetching messages: {e}")
-        return Response({
-            'error': 'Failed to fetch messages'
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        logger.error(f"Messages API error: {e}")
+        return Response({'error': 'Failed to fetch messages'}, status=500)
 
 @csrf_exempt
 @api_view(['DELETE'])
 def delete_chat_api(request, session_id):
-    """Delete a chat session"""
+    """Delete chat session"""
     try:
         session = ChatSession.objects.get(session_id=session_id)
         session.delete()
-        
         return Response({'message': 'Chat deleted successfully'})
-        
     except ChatSession.DoesNotExist:
-        return Response({
-            'error': 'Chat session not found'
-        }, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Session not found'}, status=404)
     except Exception as e:
-        logger.error(f"Error deleting chat: {e}")
-        return Response({
-            'error': 'Failed to delete chat'
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-@api_view(['GET'])
-def health_check(request):
-    """Health check endpoint"""
-    return Response({
-        'status': 'healthy',
-        'model': ai_generator.model_name
-    })
+        logger.error(f"Delete API error: {e}")
+        return Response({'error': 'Failed to delete chat'}, status=500)
