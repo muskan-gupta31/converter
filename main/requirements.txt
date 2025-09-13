@@ -1,0 +1,20 @@
+# Core Django
+Django>=4.2.0
+
+# File processing
+pandas>=2.0.0
+openpyxl>=3.1.0
+python-docx>=0.8.11
+PyPDF2>=3.0.0
+
+# PDF generation
+reportlab>=4.0.0
+
+# Excel processing
+xlrd>=2.0.0
+
+# Additional utilities
+Pillow>=10.0.0
+
+# Optional: For better PDF text extraction
+# PyMuPDF>=1.23.0  # Alternative to PyPDF2
